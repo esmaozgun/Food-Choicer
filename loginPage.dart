@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
 
-class Androidlarge2Widget extends StatelessWidget {
+class loginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +73,7 @@ class Androidlarge2Widget extends StatelessWidget {
                       height: 1,
                     ),
                   ),
-                ),
+                )
               ),
             ),
             Positioned(
@@ -305,6 +305,6 @@ class Androidlarge2Widget extends StatelessWidget {
 
 void main() {
   runApp(MaterialApp(
-    home: Androidlarge2Widget(),
+    home: loginPage(),
   ));
 }
