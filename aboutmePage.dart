@@ -1,53 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class NavbarWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 80,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset('assets/images/vector1.svg'),
-          ),
-          GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset('assets/images/vector2.svg'),
-          ),
-          FloatingActionButton(
-            onPressed: () {},
-            child: Icon(Icons.add),
-            backgroundColor: Colors.green,
-          ),
-          GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset('assets/images/vector3.svg'),
-          ),
-          GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset('assets/images/bg.svg'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class AboutMePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -96,7 +49,12 @@ class AboutMePage extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'I\'m a 20 year old software engineering intern who loves swimming, reading, and, most importantly, coding. Since I wrote my first line of code, I\'ve been hooked on the endless possibilities it offers!\n\nFood Choicer is a user-friendly app for discovering delicious recipes. Finding the perfect dish is easier than ever.\n\nFeel free to contact me for questions:\nnuresma349@gmail.com',
+                      'I\'m a 20 year old software engineering '
+                          'intern who loves swimming, reading, and, most'
+                          ' importantly, coding. Since I wrote my first line of code, '
+                          'I\'ve been hooked on the endless possibilities it offers!\n'
+                          '\nFood Choicer is a user-friendly app for discovering delicious'
+                          ' recipes. Finding the perfect dish is easier than ever.\n\nFeel free to contact me for questions:\nnuresma349@gmail.com',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
@@ -111,7 +69,7 @@ class AboutMePage extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 40,
+              top: 50,
               left: 0,
               right: 0,
               child: Center(
@@ -130,7 +88,28 @@ class AboutMePage extends StatelessWidget {
               bottom: 0,
               left: 0,
               right: 0,
-              child: NavbarWidget(),
+              child: Container(
+                width: double.infinity,
+                height: 100, // Navbar yüksekliği
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Icon(Icons.home, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
+                    Icon(Icons.search, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
+                    Icon(Icons.person, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
+                    Icon(Icons.settings, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
