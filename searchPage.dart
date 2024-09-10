@@ -1,4 +1,54 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path_provider/path_provider.dart';import 'homePage.dart'; import 'favoritesPage.dart'; import 'aboutmePage.dart';
+
+class DatabaseHelper {
+  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  static Database? _database;
+
+  factory DatabaseHelper() {
+    return _instance;
+  }
+
+  DatabaseHelper._internal();
+
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+
+    _database = await _initDatabase();
+    return _database!;
+  }
+
+  Future<Database> _initDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "testt.db");
+
+    bool dbExists = await databaseExists(path);
+
+    if (!dbExists) {
+      ByteData data = await rootBundle.load(join('assets', 'testt.db'));
+      List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      await File(path).writeAsBytes(bytes);
+    }
+    return await openDatabase(path, version: 1);
+  }
+
+  Future<void> close() async {
+    final db = await database;
+    db.close();
+  }
+
+  Future<List<String>> getRecipeNames() async {
+    final db = await database;
+    List<Map<String, dynamic>> result = await db.query('recipes', columns: ['recipe_name']);
+    return result.map((row) => row['recipe_name'].toString()).toList();
+  }
+}
 
 class Androidlarge5Widget extends StatefulWidget {
   @override
@@ -6,12 +56,19 @@ class Androidlarge5Widget extends StatefulWidget {
 }
 
 class _Androidlarge5WidgetState extends State<Androidlarge5Widget> {
+  late Future<List<String>> recipeNames;
+
+  @override
+  void initState() {
+    super.initState();
+    recipeNames = DatabaseHelper().getRecipeNames();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          // Arka plan resmi
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -22,7 +79,6 @@ class _Androidlarge5WidgetState extends State<Androidlarge5Widget> {
               ),
             ),
           ),
-          // Arama başlığı
           Positioned(
             top: 70,
             left: 140,
@@ -41,7 +97,6 @@ class _Androidlarge5WidgetState extends State<Androidlarge5Widget> {
               ),
             ),
           ),
-          // Güncellenmiş Arama Çubuğu
           Positioned(
             top: 130,
             left: 38,
@@ -85,24 +140,32 @@ class _Androidlarge5WidgetState extends State<Androidlarge5Widget> {
               ),
             ),
           ),
-          // Recipe Container
           Positioned(
             top: 220,
             left: 21,
             right: 21,
             bottom: 70,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildRecipeContainer('Recipe 1'),
-                  buildRecipeContainer('Recipe 2'),
-                  buildRecipeContainer('Recipe 3'),
-                  buildRecipeContainer('Recipe 4'),
-                ],
-              ),
+            child: FutureBuilder<List<String>>(
+              future: recipeNames,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Hata: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('Tarif bulunamadı'));
+                } else {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: snapshot.data!
+                          .map((recipeName) => buildRecipeContainer(recipeName))
+                          .toList(),
+                    ),
+                  );
+                }
+              },
             ),
           ),
-          // Navbar at the bottom
           Positioned(
             bottom: 0,
             left: 0,
@@ -121,10 +184,42 @@ class _Androidlarge5WidgetState extends State<Androidlarge5Widget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Icon(Icons.home, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
-                  Icon(Icons.bookmark, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
-                  Icon(Icons.person, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
-                  Icon(Icons.settings, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                  IconButton(
+                    icon: Icon(Icons.home, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Androidlarge4Widget()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.bookmark, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Androidlarge6Widget()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.search, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Androidlarge5Widget()),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.settings, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AboutMePage()),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -164,20 +259,6 @@ class _Androidlarge5WidgetState extends State<Androidlarge5Widget> {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(
-        child: Text('Home Page'),
       ),
     );
   }
