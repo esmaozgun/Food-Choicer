@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'homePage.dart';
+import 'searchPage.dart';
+import 'favoritesPage.dart';
 
 class AboutMePage extends StatelessWidget {
   @override
@@ -90,12 +92,12 @@ class AboutMePage extends StatelessWidget {
               right: 0,
               child: Container(
                 width: double.infinity,
-                height: 100, // Navbar yüksekliği
+                height: 100,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border(
                     top: BorderSide(
-                      color: Colors.grey,
+                      color: Colors.white,
                       width: 1.0,
                     ),
                   ),
@@ -103,10 +105,42 @@ class AboutMePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Icon(Icons.home, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
-                    Icon(Icons.search, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
-                    Icon(Icons.person, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
-                    Icon(Icons.settings, size: 30, color: Color.fromRGBO(0, 190, 41, 1)),
+                    IconButton(
+                      icon: Icon(Icons.home, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Androidlarge4Widget()),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.bookmark, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Androidlarge6Widget()),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.search, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Androidlarge5Widget()),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.settings, size: 40, color: Color.fromRGBO(0, 190, 41, 1)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AboutMePage()),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
